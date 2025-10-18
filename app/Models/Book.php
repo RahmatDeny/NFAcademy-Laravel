@@ -8,6 +8,7 @@ class Book extends Model
 {
     // Nama tabel
     protected $table = 'books';
+    public $timestamps = false;
 
     // Kolom yang bisa diisi (fillable)
     protected $fillable = [

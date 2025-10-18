@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
-use App\Models\Genre;
+use App\Http\Controllers\GenreController;
 
 Route::get('/', function () {
     return response()->json([
@@ -20,25 +20,16 @@ Route::get('/', function () {
             'POST   /api/books',
             'PUT    /api/books/{id}',
             'DELETE /api/books/{id}',
-            'GET    /api/genres'
+            'GET    /api/genres',
+            'GET    /api/genres/{id}',
+            'POST   /api/genres',
+            'PUT    /api/genres/{id}',
+            'DELETE /api/genres/{id}',
         ],
     ]);
 })->name('api.root');
 
-/**
- * Read-only endpoint untuk Genres (tanpa limit).
- * Jika nanti ingin filter/sort, cukup tambahkan query params.
- */
-Route::get('/genres', function () {
-    $genres = Genre::orderBy('id')->get();
-
-    return response()->json([
-        'status' => 'success',
-        'count'  => $genres->count(),
-        'data'   => $genres,
-    ]);
-})->name('genres.index');
-
 // Resource endpoints (tanpa limit) untuk Authors & Books
 Route::apiResource('authors', AuthorController::class);
 Route::apiResource('books',   BookController::class);
+Route::apiResource('genres',  GenreController::class);

@@ -9,15 +9,25 @@
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-12">
         <!-- Header -->
-        <div class="text-center mb-12">
+        <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">Data Genres, Authors & Books</h1>
+            <p class="text-gray-500">Pilih menu di bawah ini</p>
         </div>
 
-        <!-- Main Container - Vertical -->
+        <!-- Top Navigation Tabs -->
+        <div class="sticky top-0 z-10 bg-slate-50/90 backdrop-blur mb-6">
+            <nav class="flex gap-2 items-center border-b border-gray-200 pb-3">
+                <button id="tab-genres" data-target="genres" class="px-4 py-2 rounded-md text-sm font-semibold bg-blue-600 text-white shadow hover:bg-blue-700 focus:outline-none">Genres</button>
+                <button id="tab-authors" data-target="authors" class="px-4 py-2 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-100">Authors</button>
+                <button id="tab-books" data-target="books" class="px-4 py-2 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-100">Books</button>
+            </nav>
+        </div>
+
+        <!-- Main Container - Tabbed Sections -->
         <div class="space-y-8 mb-8">
             
             <!-- Genres Section -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div id="section-genres" class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
                     <h2 class="text-2xl font-bold text-white">Genres</h2>
                 </div>
@@ -61,7 +71,7 @@
             </div>
 
             <!-- Authors Section -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div id="section-authors" class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow hidden">
                 <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4">
                     <h2 class="text-2xl font-bold text-white">Authors</h2>
                 </div>
@@ -105,7 +115,7 @@
             </div>
 
             <!-- Books Section -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+            <div id="section-books" class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow hidden">
                 <div class="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
                     <h2 class="text-2xl font-bold text-white">Books</h2>
                 </div>
@@ -159,6 +169,67 @@
         const sampleGenres = @json($genres);
         const sampleAuthors = @json($authors);
         const sampleBooks = @json($books);
+
+        // Tab handling
+        const tabs = {
+            genres: document.getElementById('tab-genres'),
+            authors: document.getElementById('tab-authors'),
+            books: document.getElementById('tab-books'),
+        };
+        const sections = {
+            genres: document.getElementById('section-genres'),
+            authors: document.getElementById('section-authors'),
+            books: document.getElementById('section-books'),
+        };
+
+        function setActiveTab(name) {
+            // Toggle sections
+            Object.keys(sections).forEach(key => {
+                if (key === name) {
+                    sections[key].classList.remove('hidden');
+                } else {
+                    sections[key].classList.add('hidden');
+                }
+            });
+
+            // Style tabs
+            Object.keys(tabs).forEach(key => {
+                const btn = tabs[key];
+                btn.classList.remove('bg-blue-600','text-white','shadow','hover:bg-blue-700');
+                btn.classList.remove('bg-emerald-600','hover:bg-emerald-700');
+                btn.classList.remove('bg-purple-600','hover:bg-purple-700');
+                btn.classList.add('text-gray-700','hover:bg-gray-100');
+            });
+
+            const btn = tabs[name];
+            btn.classList.remove('text-gray-700','hover:bg-gray-100');
+            // Color based on active tab
+            if (name === 'genres') {
+                btn.classList.add('bg-blue-600','text-white','shadow','hover:bg-blue-700');
+            } else if (name === 'authors') {
+                btn.classList.add('bg-emerald-600','text-white','shadow','hover:bg-emerald-700');
+            } else if (name === 'books') {
+                btn.classList.add('bg-purple-600','text-white','shadow','hover:bg-purple-700');
+            }
+        }
+
+        // Click listeners
+        Object.values(tabs).forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+                setActiveTab(target);
+                // Update hash for sharable state
+                if (history.pushState) {
+                    history.pushState(null, '', `#${target}`);
+                } else {
+                    location.hash = `#${target}`;
+                }
+            });
+        });
+
+        // Initialize active tab based on hash or default to genres
+        const initial = (location.hash || '#genres').replace('#','');
+        setActiveTab(['genres','authors','books'].includes(initial) ? initial : 'genres');
 
         class Paginator {
             constructor(data, tableId, perPageSelectId, infoId, prevBtnId, nextBtnId, pageBtnsId, dataType) {
