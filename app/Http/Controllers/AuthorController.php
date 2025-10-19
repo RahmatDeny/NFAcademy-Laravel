@@ -50,8 +50,8 @@ class AuthorController extends Controller
     {
         $validated = $request->validate([
             'name'  => ['required', 'string', 'max:255'],
-            'photo' => ['nullable', 'string', 'max:255'],
-            'bio'   => ['nullable', 'string'],
+            'photo' => ['required', 'string', 'max:255'],
+            'bio'   => ['required', 'string'],
         ]);
 
         $author = Author::create($validated);
@@ -77,8 +77,8 @@ class AuthorController extends Controller
 
         $validated = $request->validate([
             'name'  => ['sometimes', 'required', 'string', 'max:255'],
-            'photo' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'bio'   => ['sometimes', 'nullable', 'string'],
+            'photo' => ['sometimes', 'required', 'string', 'max:255'],
+            'bio'   => ['sometimes', 'required', 'string'],
         ]);
 
         $author->update($validated);
