@@ -64,3 +64,21 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## API Access & Roles (Project Notes)
+
+- Public endpoints (no authentication):
+  - `GET /api/authors`
+  - `GET /api/authors/{id}`
+  - `GET /api/genres`
+  - `GET /api/genres/{id}`
+- Admin-only endpoints (HTTP Basic Auth + admin role required):
+  - `POST /api/authors`, `PUT /api/authors/{id}`, `DELETE /api/authors/{id}`
+  - `POST /api/genres`, `PUT /api/genres/{id}`, `DELETE /api/genres/{id}`
+
+Authentication uses HTTP Basic Auth. For testing with Postman, use:
+
+- Email: `admin@example.com`
+- Password: `admin123`
+
+These credentials are seeded by `UserSeeder`.

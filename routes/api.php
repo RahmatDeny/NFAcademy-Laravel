@@ -29,7 +29,24 @@ Route::get('/', function () {
     ]);
 })->name('api.root');
 
-// Resource endpoints (tanpa limit) untuk Authors & Books
-Route::apiResource('authors', AuthorController::class);
+// Books routes (tetap default — belum dibatasi dalam instruksi)
 Route::apiResource('books',   BookController::class);
-Route::apiResource('genres',  GenreController::class);
+
+// PUBLIC: Author & Genre - index + show dapat diakses semua orang
+Route::get('authors', [AuthorController::class, 'index']);
+Route::get('authors/{id}', [AuthorController::class, 'show']);
+Route::get('genres', [GenreController::class, 'index']);
+Route::get('genres/{id}', [GenreController::class, 'show']);
+
+// ADMIN ONLY: Author & Genre - create, update, destroy
+Route::middleware(['auth.basic', 'admin'])->group(function () {
+    // Authors
+    Route::post('authors', [AuthorController::class, 'store']);
+    Route::put('authors/{id}', [AuthorController::class, 'update']);
+    Route::delete('authors/{id}', [AuthorController::class, 'destroy']);
+
+    // Genres
+    Route::post('genres', [GenreController::class, 'store']);
+    Route::put('genres/{id}', [GenreController::class, 'update']);
+    Route::delete('genres/{id}', [GenreController::class, 'destroy']);
+});
