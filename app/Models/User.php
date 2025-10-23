@@ -48,4 +48,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Relasi: seorang user (customer) memiliki banyak transaksi.
+     */
+    public function transactions()
+    {
+        return $this->hasMany(\App\Models\Transaction::class, 'customer_id');
+    }
 }

@@ -9,6 +9,7 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('order_number', 255)->unique();
+
             $table->unsignedInteger('customer_id');
             $table->unsignedInteger('book_id');
             $table->decimal('total_amount', 10, 2);

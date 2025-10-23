@@ -75,6 +75,12 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - Admin-only endpoints (HTTP Basic Auth + admin role required):
   - `POST /api/authors`, `PUT /api/authors/{id}`, `DELETE /api/authors/{id}`
   - `POST /api/genres`, `PUT /api/genres/{id}`, `DELETE /api/genres/{id}`
+  - `GET /api/transactions` (read all)
+  - `DELETE /api/transactions/{id}`
+- Customer endpoints (HTTP Basic Auth + customer role required):
+  - `POST /api/transactions`
+  - `PUT /api/transactions/{id}` (only own)
+  - `GET /api/transactions/{id}` (only own)
 
 Authentication uses HTTP Basic Auth. For testing with Postman, use:
 
@@ -82,3 +88,15 @@ Authentication uses HTTP Basic Auth. For testing with Postman, use:
 - Password: `admin123`
 
 These credentials are seeded by `UserSeeder`.
+
+For customer access use:
+
+- Email: `user@example.com`
+- Password: `user12345`
+
+Quick Postman steps:
+- Create a request and open the Authorization tab, choose `Basic Auth`.
+- Fill in the email and password for either Admin or Customer.
+- Try creating a transaction (Customer): `POST /api/transactions` with JSON body:
+  `{ "order_number": "ORD-0001", "book_id": 1, "total_amount": 150000 }`
+- List all transactions (Admin): `GET /api/transactions`.

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return response()->json([
@@ -25,6 +26,11 @@ Route::get('/', function () {
             'POST   /api/genres',
             'PUT    /api/genres/{id}',
             'DELETE /api/genres/{id}',
+            'GET    /api/transactions           (admin)',
+            'GET    /api/transactions/{id}      (customer own)',
+            'POST   /api/transactions           (customer)',
+            'PUT    /api/transactions/{id}      (customer own)',
+            'DELETE /api/transactions/{id}      (admin)',
         ],
     ]);
 })->name('api.root');
@@ -49,4 +55,18 @@ Route::middleware(['auth.basic', 'admin'])->group(function () {
     Route::post('genres', [GenreController::class, 'store']);
     Route::put('genres/{id}', [GenreController::class, 'update']);
     Route::delete('genres/{id}', [GenreController::class, 'destroy']);
+});
+
+// Transactions routing per instruksi
+// Admin: read all & destroy
+Route::middleware(['auth.basic', 'admin'])->group(function () {
+    Route::get('transactions', [TransactionController::class, 'index']);
+    Route::delete('transactions/{id}', [TransactionController::class, 'destroy']);
+});
+
+// Customer: create, update, show (autentikasi wajib)
+Route::middleware(['auth.basic', 'customer'])->group(function () {
+    Route::post('transactions', [TransactionController::class, 'store']);
+    Route::put('transactions/{id}', [TransactionController::class, 'update']);
+    Route::get('transactions/{id}', [TransactionController::class, 'show']);
 });

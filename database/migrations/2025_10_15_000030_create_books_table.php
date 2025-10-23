@@ -11,8 +11,9 @@ return new class extends Migration {
             $table->string('title', 255);
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->integer('stock'); // INT(11)
+            $table->integer('stock');
             $table->string('cover_photo', 255);
+
             $table->unsignedInteger('genre_id');
             $table->unsignedInteger('author_id');
 
